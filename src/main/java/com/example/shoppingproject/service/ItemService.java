@@ -55,6 +55,10 @@ public class ItemService {
         return retrieve(itemEntity.getUserId());
     }
 
+    public List<ItemEntity> getAllItems(String userId) {
+        return itemRepository.findByUserId(userId);
+    }
+
     private void validate(final ItemEntity itemEntity){
         if(itemEntity == null){
             log.warn("Entity cannot be null");

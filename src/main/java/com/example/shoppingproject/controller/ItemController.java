@@ -39,7 +39,6 @@ public class ItemController {
     }
 
      //제품 정보 검색
-    // 인증 받아 오는거 다시 생각하기
      @GetMapping
      public ResponseEntity<?> retrieveItemList(@AuthenticationPrincipal String userId, ItemDTO dto) {
          try {
@@ -84,4 +83,19 @@ public class ItemController {
             return ResponseEntity.badRequest().body(response);
         }
     }
+
+    @GetMapping("/list")
+    public ResponseEntity<?> retrieveItemList(@AuthenticationPrincipal String userId) {
+        try {
+            List<ItemEntity> itemEntities = itemService.getAllItems(userId);
+            List<ItemDTO> dtos = itemEntities.stream().map(ItemDTO::new).collect(Collectors.toList());
+            ResponseDTO<ItemDTO> response = ResponseDTO.<ItemDTO>builder().data(dtos).build();
+            return ResponseEntity.ok().body(response);
+        } catch (Exception e) {
+            String error = e.getMessage();
+            ResponseDTO<ItemDTO> response = ResponseDTO.<ItemDTO>builder().error(error).build();
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
+
 }
